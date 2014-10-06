@@ -9,6 +9,7 @@ This set of scripts takes in RNA seq expression data and constructs co-expressio
 
 Brief details of each script can are provided in the file descriptions but it is worth mentioning the logic order in which these operate:
 
+#included scripts and brief descriptions.
 
 [1] Fiber_Norm_RPM.R will take in raw count data and output normalized libraries ans well as library sizes.
 
