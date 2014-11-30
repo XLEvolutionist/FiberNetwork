@@ -11,7 +11,7 @@
 ####
 #Functions
 ####
-source("/Users/simonrenny-byfield/scripts/HomeoNorm.R")
+source("/Users/srbyfield/GitHub/HomeoNorm/HomeoNorm.R")
 
 #function to find if each row (gene) can distinguish 
 #At and Dt well enough
@@ -42,7 +42,7 @@ HomeoCheck<-function (x, cut=20 ) {
 
 
 #Load in count data
-HomeoData<-read.table("/Users/simonrenny-byfield/cotton/diploid_domestication/FiberTranscriptomeProject/homeoData/AD1_domesticated_homeo_counts.txt", header = T , sep = "\t")
+HomeoData<-read.table("/Users/srbyfield/Desktop/WGCNA\ networks/AD1_domesticated_homeo_counts.txt", header = T , sep = "\t")
 #Normalize the data
 HomeoDataNorm<-HomeoNorm(HomeoData)
 LibSizes<-HomeoDataNorm$sizes
@@ -62,7 +62,8 @@ HomeoTrim<-HomeoDataNorm[keep,]
 #sort the columns of the matrix in order to get Maxxa together
 HomeoSort<-HomeoTrim[,sort(colnames(HomeoTrim))]
 
-save(HomeoSort, file="/Users/simonrenny-byfield/cotton/diploid_domestication/FiberTranscriptomeProject/homeoData/HomeoExprTrimmed.RData")
+#save(HomeoSort, file="/Users/simonrenny-byfield/cotton/diploid_domestication/FiberTranscriptomeProject/homeoData/HomeoExprTrimmed.RData")
+#load("/Users/srbyfield/Desktop/WGCNA\ networks/HomeoExprTrimmed.RData")
 #set up a string contaning sample info
 samples<-rep(c("10A","10D","10N","15A","15D","15N","20A","20D","20N","5A","5D","5N"),3)
 
@@ -103,20 +104,20 @@ clust<-hclust(testDist)
 #cut the tree at hiehgt 0.8
 groups<-cutree(clust, h=.8)
 #try those ALL genes
-AlltestDist<-dist(fractionDt,method = "euclidean")
-Allclust<-hclust(AlltestDist)
+#AlltestDist<-dist(fractionDt,method = "euclidean")
+#Allclust<-hclust(AlltestDist)
 #cut the tree at hiehgt 0.8
-groups<-cutree(Allclust, h=.8)
+#groups<-cutree(Allclust, h=.8)
 
 pdf("clusterHomeo.pdf", height = 10, width = 15)
-par(mfrow=c(2,2))
+par(mfrow=c(3,3))
 for ( i in unique(groups)) {
  print(i)
- plot(rep(seq(from=5,to=20,by=5),dim(HomeoMeans)[1]),t(fractionDt), type="n", xlab="development DPA", ylab = "fraction Dt contribution", cex.lab = 1.6,cex.axis=1.6  )
+ plot(rep(seq(from=5,to=20,by=5),dim(HomeoMeans)[1]),t(fractionDt), type="n", xlab="development DPA", ylab = "fraction Dt contribution", cex.lab = 2,cex.axis=2  )
  aveLine<-rowMeans(t(swithcData[names(groups[groups == i]),]))
  lines(rep(seq(from=5,to=20,by=5),dim(swithcData[names(groups[groups == i]),])[1]),t(swithcData[names(groups[groups == i]),]), lwd= 0.05, col = "red")
  lines(seq(from=5,to=20,by=5),aveLine, lwd= 4, col = "black", lty = "dashed")
- text(7.5,0.9,paste("N=",dim(swithcData[names(groups[groups == i]),])[1]), cex = 1.5)
+ text(7.5,0.9,paste("N=",dim(swithcData[names(groups[groups == i]),])[1]), cex = 3)
 }
 dev.off()
 

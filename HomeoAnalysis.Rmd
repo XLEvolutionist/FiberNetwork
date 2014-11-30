@@ -1,0 +1,50 @@
+---
+title: "Transcriptome mimcry in two homeologous co-expression networks"
+author: "Simon Renny-Byfield and Jonathan F. Wendel"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+This document serves as a reference for the work done on cotton fiber RNA data as part of a post-doc done in the lab of Jonathan F. Wendel at Iowa State University. I will try to argue that there is essentailly mimicry between the homeologous co-expression networks of the At and Dt sub-genomes of domesticated polyploid cotton *Gossypium hirsutum* L.
+
+The work focusses on Fiber RNA gathered over a time course of cotton fiber development, from 5 to 20 DPA in increments of 5. We have three repeats at each time period for each condition such that for the polyploid *G. hirsutum* we have 12 samples for doemsticated and 12 samples for the wild condition.
+
+Firstly we will cover Homeologue DGE analysis.
+
+##Differential expression bias between homeologues in domesticated cotton fiber##
+
+This analysis focuses on calling differential gene expression between homoeologs. In this instance I used R and the script [HomeoTtest](https://github.com/XLEvolutionist/FiberNetwork/blob/master/HomeoTtest.R) to assess differential expression. Essentially this uses mornalized read counts to assess differnential expression via a t-test. This takes advantage of the biological reps and the normalization of homoeologous counts (performed using [HomeoNorm](https://github.com/XLEvolutionist/HomeoNorm/blob/master/HomeoNorm.R)). The normalization takes the total library size of each rep, and then ensures the the ratio of At, Dt and N is maintained but the reps themselves are normalized.
+
+Here is the outout of that analysis:
+
+![Homoelog expression bias in cotton fiber](/Users/srbyfield/test.png)
+
+From this data it seems that Dt has more over expressed homoeologs than At. I perfomred a binomial test to examine statistical deviation from equality between up-regulated in At vs Dt. The test was significant for 5, and 15 DPA, but not for 10 ro 20 DPA. However, when combining all the counts for each DPA the result is also significant:
+```{r}
+binom.test(1020,1800,p=0.5)
+```
+I have tabulated all the gene the exhibiting expression bias in homoeolog usage in each stage which can be supplied as supplementary file in the main document.
+
+Interestingly the fact remains that there are relatively few genes where homoeologs are differentially expressed. Out of the 16,611 genes considered in this analysis at most 951 are differentailly expressed at one stage (5 DPA in this case), the other stages have between only 5 (20 DPA) and 568 (15 DPA) homeologs that show significant boas in expression.
+
+##Homoeolog "switching" in domesticated cotton fiber##
+
+The next question (which you asked me to address, Jonathan) is ther prevalence of cases where usage in homoeolog expression switches over time. For example,  at the start of fiber development At dominates, but is superseeded by Dt at later stages. To achieve this is used the R script [HomeoSwitch](https://github.com/XLEvolutionist/FiberNetwork/blob/master/HomeoSwitch.R). In this case I take the mean expression of each homoeolog at each stage of development and calculate the mean percentage contribution of At and Dt to total expression. So in this case the analysis compares the *relatvive* contribution of homoeolgs to *total* gene expression and is actually independent of the degree to which a gene is expressed. There are a number of restrictions in the analysis which are detailed in the script, but are also listed below:
+
+* min expression of 0.2 RPM.
+* At and Dt counts are at least 20% of the total counts (i.e. including Ns)
+* Homoeolg *switching** is defined as cases where there is a min and max contribution of 30% and 70% respectively.
+
+Screening for genes that fulfil this criteria revealed that 506 genes show evidence of switching, a surprisingly small number. This means that generally most genes maintain a similar balance between homoeolog usage through development. Thiscan be seen in the following plot where the contribution of Dt is plotted againts developmental stage:
+
+<img src="/Users/srbyfield/Desktop/allHomoelogs.tiff" height="400px" width="600px" />
+
+It can easily be seen that the vast majority of genes have roughly equal balance between homoeologs, hence the thick black band across the middle of the plot.
+
+Narrowing the analysis to genes that do show evidence of switching and using hierachical clustering via euclidean distance (of homoeolog contribution) revelaed several patterns of homoeolog switching during development.
+
+<img src="/Users/srbyfield/Desktop/clusterHomeo.pdf" height="400px" width="600px" />
