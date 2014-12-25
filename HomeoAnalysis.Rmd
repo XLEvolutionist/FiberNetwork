@@ -51,7 +51,7 @@ Narrowing the analysis to genes that do show evidence of switching and using hie
 
 ##Constructing Homoeolog expression networks in allopolyploid cotton fiber##
 
-I constructed co-expression networks using the [WGCNA](http://link) package implemented in R using expression data from At, Dt and A (sub-genomes). The processes involves building a correlation matrix of gene expression and then using hierarchical clustering to group genes based on that correlation. Details can be found in [this](http://link) paper. Parameters used during network analysis include:
+I constructed co-expression networks using the [WGCNA](http://labs.genetics.ucla.edu/horvath/CoexpressionNetwork/Rpackages/WGCNA/) package implemented in R using expression data from At, Dt and A (sub-genomes). The processes involves building a correlation matrix of gene expression and then using hierarchical clustering to group genes based on that correlation. Details can be found in [this](http://www.biomedcentral.com/1471-2105/9/559) paper. Parameters used during network analysis include:
 
 1. Power of 16.
 2. Minimum module of 30
@@ -59,13 +59,13 @@ I constructed co-expression networks using the [WGCNA](http://link) package impl
 4. Minimum number of genes of 50
 5. Minimum normalized expression of 3 RPM.
 
-The analysis was performed using the script [HomeoNetwork.R](http://link). The resulting gene expression networks can be depicted as a cladogram with module membership indicated by the colored panel below. Firstly I assembled co-expression networks for At and Dt homeologs separately (It is important to realise the colors in each of the cladograms do not represent equivalent modules in the two different analyses).
+The analysis was performed using the script [HomeoNetwork.R](https://github.com/XLEvolutionist/FiberNetwork/blob/master/HomeoNetwork.R). The resulting gene expression networks can be depicted as a cladogram with module membership indicated by the colored panel below. Firstly I assembled co-expression networks for At and Dt homeologs separately (It is important to realise the colors in each of the cladograms do not represent equivalent modules in the two different analyses).
 
 <img src="/Users/srbyfield/Desktop/WGCNAnetworks/At_and_Dt_cladogram.tiff" height="325px" width="700px" />
 
 In order to generate the networks I tried a huge number of different parameters, with the analysis shown appearing to include the most genes into co-expression networks and also grouping the genes in a more coherent way.
 
-I thought it might be fun to take a look at the At and Dt co-expression networks and see how they look in 3D space. Using a correlation matrix, and coloring each gene according to the WGCNA module designation in *Dt*, I was able to create the following 2D projections of 3D networks using the R package [igraph](http://link) and the script [construct_igraph_netwrok_homeologs.R](http://link). 
+I thought it might be fun to take a look at the At and Dt co-expression networks and see how they look in 3D space. Using a correlation matrix, and coloring each gene according to the WGCNA module designation in *Dt*, I was able to create the following 2D projections of 3D networks using the R package [igraph](http://igraph.org/redirect.html) and the script [construct_igraph_netwrok_homeologs.R](https://github.com/XLEvolutionist/FiberNetwork/blob/master/construct_igraph_netwrok_homeologs.R). 
 
 <img src="/Users/srbyfield/Desktop/WGCNAnetworks/AtvsDtnetwork.tiff" height="325px" width="700px" />
 
@@ -83,10 +83,12 @@ Module membership is the degree to which a particular gene correlates with expre
 
 From this plot you can see that there are cases where homoelogs show completely differnt patterns of connectivity (in the top left and bottom right of the plot). These genes are highly connected in one homeologous network, but with low connectivity in another homeologous network. However, overall neither of the two homeologous networks dominates over the other (as can be seen by the approximate 1:1 relationship between intramodule connectivity). Addtionally, most of the genes cluster and the bottom left of the plot, with low conncectivity on both homeologous networks.
 
-##Using eigen gene values to examine module expression##
+##Using *eigengene* values to examine module expression##
 
-We can compress the multi-variate expression matrix into a single eigengene value, and then compare this value between *At* and *Dt* homeologous networks as well as between different stages of development on a per module basis. Below are examples from two modules, the lightgreen and lightcyan modules.
+We can compress the multi-variate expression matrix into a single eigengene value, and then compare this value between *At* and *Dt* homeologous networks as well as between different stages of development on a per module basis. Below are examples from two modules, the lightcyan and lightgreen modules.
 
 <img src="/Users/srbyfield/GitHub/presentations/module_expression.tiff" height="300px" width="750px" />
+
+As you can see the eigengene value varies by developmental stage, that is, there is clear developmental signal in the expression data. Importantly however, although there is variation along the developmental axis the values for *At* and *Dt* eigengenes are very similar at any given stage. From this we can conclude that the general expression of genes in lightgreen and lightcyan modules is extremely similar in *At* and *Dt*. Provided here are only two examples of eigengene values but the trend continues for all the other modules and a complete pdf of all modules can be found [here](https://github.com/XLEvolutionist/FiberNetwork/blob/master/eigenGene_expression%20copy.pdf) 
 
 
