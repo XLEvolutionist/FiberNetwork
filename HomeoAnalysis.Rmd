@@ -1,5 +1,5 @@
 ---
-title: "Transcriptome mimcry in two homeologous co-expression networks"
+title: "Transcriptome mimicry in two homeologous co-expression networks"
 author: "Simon Renny-Byfield and Jonathan F. Wendel"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -9,9 +9,9 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-This document serves as a reference for the work done on cotton fiber RNA data as part of a post-doc done in the lab of Jonathan F. Wendel at Iowa State University. I will try to argue that there is essentailly mimicry between the homeologous co-expression networks of the At and Dt sub-genomes of domesticated polyploid cotton *Gossypium hirsutum* L.
+This document serves as a reference for the work done on cotton fiber RNA data as part of a post-doc done in the lab of Jonathan F. Wendel at Iowa State University. I will try to argue that there is essentially mimicry between the homeologous co-expression networks of the At and Dt sub-genomes of domesticated polyploid cotton *Gossypium hirsutum* L.
 
-The work focusses on Fiber RNA gathered over a time course of cotton fiber development, from 5 to 20 DPA in increments of 5. We have three repeats at each time period for each condition such that for the polyploid *G. hirsutum* we have 12 samples for doemsticated and 12 samples for the wild condition.
+The work focuses on Fiber RNA gathered over a time course of cotton fiber development, from 5 to 20 DPA in increments of 5. We have three repeats at each time period for each condition such that for the polyploid *G. hirsutum* we have 12 samples for domesticated and 12 samples for the wild condition.
 
 Firstly we will cover Homeologue DGE analysis.
 
@@ -19,32 +19,74 @@ Firstly we will cover Homeologue DGE analysis.
 
 This analysis focuses on calling differential gene expression between homoeologs. In this instance I used R and the script [HomeoTtest](https://github.com/XLEvolutionist/FiberNetwork/blob/master/HomeoTtest.R) to assess differential expression. Essentially this uses mornalized read counts to assess differnential expression via a t-test. This takes advantage of the biological reps and the normalization of homoeologous counts (performed using [HomeoNorm](https://github.com/XLEvolutionist/HomeoNorm/blob/master/HomeoNorm.R)). The normalization takes the total library size of each rep, and then ensures the the ratio of At, Dt and N is maintained but the reps themselves are normalized.
 
-Here is the outout of that analysis:
+Here is the output of that analysis:
 
-![Homoelog expression bias in cotton fiber](/Users/srbyfield/test.png)
+<img src="/Users/srbyfield/test.png" height="400px" width="500" />
 
-From this data it seems that Dt has more over expressed homoeologs than At. I perfomred a binomial test to examine statistical deviation from equality between up-regulated in At vs Dt. The test was significant for 5, and 15 DPA, but not for 10 ro 20 DPA. However, when combining all the counts for each DPA the result is also significant:
+From this data it seems that Dt has more over expressed homoeologs than At. I performed a binomial test to examine statistical deviation from equality between up-regulated in At vs Dt. The test was significant for 5, and 15 DPA, but not for 10 to 20 DPA. However, when combining all the counts for each DPA the result is also significant:
 ```{r}
 binom.test(1020,1800,p=0.5)
 ```
 I have tabulated all the gene the exhibiting expression bias in homoeolog usage in each stage which can be supplied as supplementary file in the main document.
 
-Interestingly the fact remains that there are relatively few genes where homoeologs are differentially expressed. Out of the 16,611 genes considered in this analysis at most 951 are differentailly expressed at one stage (5 DPA in this case), the other stages have between only 5 (20 DPA) and 568 (15 DPA) homeologs that show significant boas in expression.
+Interestingly the fact remains that there are relatively few genes where homoeologs are deferentially expressed. Out of the 16,611 genes considered in this analysis at most 951 are deferentially expressed at one stage (5 DPA in this case), the other stages have between only 5 (20 DPA) and 568 (15 DPA) homeologs that show significant boas in expression.
 
 ##Homoeolog "switching" in domesticated cotton fiber##
 
-The next question (which you asked me to address, Jonathan) is ther prevalence of cases where usage in homoeolog expression switches over time. For example,  at the start of fiber development At dominates, but is superseeded by Dt at later stages. To achieve this is used the R script [HomeoSwitch](https://github.com/XLEvolutionist/FiberNetwork/blob/master/HomeoSwitch.R). In this case I take the mean expression of each homoeolog at each stage of development and calculate the mean percentage contribution of At and Dt to total expression. So in this case the analysis compares the *relatvive* contribution of homoeolgs to *total* gene expression and is actually independent of the degree to which a gene is expressed. There are a number of restrictions in the analysis which are detailed in the script, but are also listed below:
+The next question (which you asked me to address, Jonathan) is the prevalence of cases where homoeolog expression switches over time. For example,  at the start of fiber development At dominates, but is superseded by Dt at later stages. To achieve this is used the R script [HomeoSwitch](https://github.com/XLEvolutionist/FiberNetwork/blob/master/HomeoSwitch.R). In this case I take the mean expression of each homoeolog at each stage of development and calculate the mean percentage contribution of At and Dt to total expression. So in this case the analysis compares the *relatvive* contribution of homoeolgs to *total* gene expression and is actually independent of the degree to which a gene is expressed. There are a number of restrictions in the analysis which are detailed in the script, but are also listed below:
 
 * min expression of 0.2 RPM.
 * At and Dt counts are at least 20% of the total counts (i.e. including Ns)
 * Homoeolg *switching** is defined as cases where there is a min and max contribution of 30% and 70% respectively.
 
-Screening for genes that fulfil this criteria revealed that 506 genes show evidence of switching, a surprisingly small number. This means that generally most genes maintain a similar balance between homoeolog usage through development. Thiscan be seen in the following plot where the contribution of Dt is plotted againts developmental stage:
+Screening for genes that fulfill this criteria revealed that 506 genes show evidence of switching, a surprisingly small number. This means that generally most genes maintain a similar balance between homoeolog usage through development. This can be seen in the following plot where the contribution of Dt is plotted against developmental stage:
 
 <img src="/Users/srbyfield/Desktop/allHomoelogs.tiff" height="400px" width="600px" />
 
 It can easily be seen that the vast majority of genes have roughly equal balance between homoeologs, hence the thick black band across the middle of the plot.
 
-Narrowing the analysis to genes that do show evidence of switching and using hierachical clustering via euclidean distance (of homoeolog contribution) revelaed several patterns of homoeolog switching during development.
+Narrowing the analysis to genes that do show evidence of switching and using hierarchical clustering via euclidean distance (of homoeolog contribution) revealed several patterns of homoeolog switching during development.
 
 <img src="/Users/srbyfield/Desktop/clusterHomeo.pdf" height="400px" width="600px" />
+
+##Constructing Homoeolog expression networks in allopolyploid cotton fiber##
+
+I constructed co-expression networks using the [WGCNA](http://link) package implemented in R using expression data from At, Dt and A (sub-genomes). The processes involves building a correlation matrix of gene expression and then using hierarchical clustering to group genes based on that correlation. Details can be found in [this](http://link) paper. Parameters used during network analysis include:
+
+1. Power of 16.
+2. Minimum module of 30
+3. Tree cut height of 0.20
+4. Minimum number of genes of 50
+5. Minimum normalized expression of 3 RPM.
+
+The analysis was performed using the script [HomeoNetwork.R](http://link). The resulting gene expression networks can be depicted as a cladogram with module membership indicated by the colored panel below. Firstly I assembled co-expression networks for At and Dt homeologs separately (It is important to realise the colors in each of the cladograms do not represent equivalent modules in the two different analyses).
+
+<img src="/Users/srbyfield/Desktop/WGCNAnetworks/At_and_Dt_cladogram.tiff" height="325px" width="700px" />
+
+In order to generate the networks I tried a huge number of different parameters, with the analysis shown appearing to include the most genes into co-expression networks and also grouping the genes in a more coherent way.
+
+I thought it might be fun to take a look at the At and Dt co-expression networks and see how they look in 3D space. Using a correlation matrix, and coloring each gene according to the WGCNA module designation in *Dt*, I was able to create the following 2D projections of 3D networks using the R package [igraph](http://link) and the script [construct_igraph_netwrok_homeologs.R](http://link). 
+
+<img src="/Users/srbyfield/Desktop/WGCNAnetworks/AtvsDtnetwork.tiff" height="325px" width="700px" />
+
+At the moment you cannot see the edges between nodes (the are there but far too faint). In this plot it is important to realise that the colors *DO* mean the same thing, as genes are colored by their module designation in *Dt* in both plots. What this reveals is that largely the modules colors are co-localised in both the *At* and *Dt* networks, although the *Dt* network is tighter than the *At* counterpart (no surprise given that the genes are colored according to *Dt* designation). This means that genes in one module in *Dt* are also co-localised in the *At* plot indicating that co-expression patterns are some what maintained between the two. This is a ground truthing issue. We seem to be recovering the similar patterns in *At* and *Dt* networks, which is encouraging. It gets more interesting later... 
+
+##Looking at module membership (i.e. hub-genes)##
+
+Module membership is the degree to which a particular gene correlates with expression to other genes in the network. If a gene is highly correlated with many genes within the same network then we can decuce that it is a *hub-like* gene (it has many significant correlations with genes in the same module). In the next analysis I examine the *connectivity* ( i.e. module membership) for genes in *At* and *Dt* networks. Firstly you can look at the *intramodule connectivity* between *At* and *Dt* homeologs and compare them. Interesting questions in this regard include:
+
+1.  Are homoelogs broadly equal in connectivity (perhaps a regression might help explain this).
+2.  Does one of the sub-genome dominante the other in terms of connectivity (hub-genes)?
+3.  Is this pattern variable in different modules.
+
+<img src="/Users/srbyfield/Desktop/WGCNAnetworks/intramonConnectivity.jpg" height="400px" width="400px" />
+
+From this plot you can see that there are cases where homoelogs show completely differnt patterns of connectivity (in the top left and bottom right of the plot). These genes are highly connected in one homeologous network, but with low connectivity in another homeologous network. However, overall neither of the two homeologous networks dominates over the other (as can be seen by the approximate 1:1 relationship between intramodule connectivity). Addtionally, most of the genes cluster and the bottom left of the plot, with low conncectivity on both homeologous networks.
+
+##Using eigen gene values to examine module expression##
+
+We can compress the multi-variate expression matrix into a single eigengene value, and then compare this value between *At* and *Dt* homeologous networks as well as between different stages of development on a per module basis. Below are examples from two modules, the lightgreen and lightcyan modules.
+
+<img src="/Users/srbyfield/GitHub/presentations/module_expression.tiff" height="300px" width="750px" />
+
+
